@@ -2,4 +2,31 @@
 @model Shrimply.Pages.Admin.Shrimps.ListModel
 @{
 }
-LIST
+
+<div class="container mb-3">
+    <h3>Shrimps</h3>
+</div>
+
+<div>
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var shrimp in Model.Shrimps)
+                {
+                    <tr>
+                    <td>@shrimp.Id</td>
+                    <td>@shrimp.Name</td>
+                    <td><a href="#" class="btn btn-primary">View</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

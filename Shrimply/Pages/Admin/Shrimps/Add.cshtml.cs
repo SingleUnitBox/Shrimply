@@ -3,16 +3,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shrimply.Data;
 using Shrimply.Models.Domain;
 using Shrimply.Models.ViewModels;
+using Shrimply.Repositories;
 
 namespace Shrimply.Pages.Admin.Shrimps
 {
     public class AddModel : PageModel
     {
-        private readonly ShrimplyDbContext _shrimplyDbContext;
+        private readonly IShrimpRepository _shrimpRepository;
 
-        public AddModel(ShrimplyDbContext shrimplyDbContext)
+        public AddModel(IShrimpRepository shrimpRepository)
         {
-            _shrimplyDbContext = shrimplyDbContext;
+            _shrimpRepository = shrimpRepository;
         }
         [BindProperty]
         public AddShrimp AddShrimpRequest { get; set; }
@@ -33,8 +34,7 @@ namespace Shrimply.Pages.Admin.Shrimps
                 Author = AddShrimpRequest.Author,
                 IsVisible = AddShrimpRequest.IsVisible,
             };
-            await _shrimplyDbContext.AddAsync(shrimp);
-            await _shrimplyDbContext.SaveChangesAsync();
+            await _shrimpRepository.AddAsync(shrimp);
             return RedirectToPage("/Admin/Shrimps/List");
         }
     }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Shrimply.Data;
+using Shrimply.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<ShrimplyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ShrimplyConnectionString")));
+
+builder.Services.AddScoped<IShrimpRepository, ShrimpRepository>();
 
 var app = builder.Build();
 
