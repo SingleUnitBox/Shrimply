@@ -1,7 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using Shrimply.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddDbContext<ShrimplyDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ShrimplyConnectionString")));
 
 var app = builder.Build();
 
