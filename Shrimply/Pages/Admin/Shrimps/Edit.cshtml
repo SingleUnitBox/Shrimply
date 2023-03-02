@@ -10,65 +10,81 @@
 
 <partial name="_Notification">
 
-<div>
-    <div class="container">
-        <form method="post">
+    @if (Model.Shrimp != null)
+    {
+        <div>
+            <div class="container">
+                <form method="post">
 
-            <div class="mb-3">
-                <label class="form-label" for="name">Id</label>
-                <input type="text" class="form-control" id="name" asp-for="Shrimp.Id" readonly />
+                    <div class="mb-3">
+                        <label class="form-label" for="name">Id</label>
+                        <input type="text" class="form-control" id="name" asp-for="Shrimp.Id" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="name">Name</label>
+                        <input type="text" class="form-control" id="name" asp-for="Shrimp.Name" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="description">Description</label>
+                        <textarea class="form-control" id="description" asp-for="Shrimp.Description"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="color">Color</label>
+                        <input type="text" class="form-control" id="color" asp-for="Shrimp.Color" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="family">Family</label>
+                        <input type="text" class="form-control" id="family" asp-for="Shrimp.Family" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="featuredImageUrl">Featured Image Url</label>
+                        <input type="text" class="form-control" id="featuredImageUrl" asp-for="Shrimp.FeaturedImageUrl" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="urlHandle">Url Handle</label>
+                        <input type="text" class="form-control" id="urlHandle" asp-for="Shrimp.UrlHandle" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="publishedDate">Published Date</label>
+                        <input type="date" class="form-control" id="publishedDate" asp-for="Shrimp.PublishedDate" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="author">Author</label>
+                        <input type="text" class="form-control" id="author" asp-for="Shrimp.Author" />
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-inline" id="isVisible" asp-for="Shrimp.IsVisible" />
+                        <label class="form-check-label" for="isVisible">Is Visible?</label>
+                    </div>
+
+                    <div class="mb-3 d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary" asp-page-handler="Edit">Edit</button>
+                        <button type="submit" class="btn btn-danger" asp-page-handler="Delete">Delete</button>
+                    </div>
+
+                </form>
             </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <p>Shrimp not found</p>
+        </div>
+    }
 
-            <div class="mb-3">
-                <label class="form-label" for="name">Name</label>
-                <input type="text" class="form-control" id="name" asp-for="Shrimp.Name" />
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="description">Description</label>
-                <input type="text" class="form-control" id="description" asp-for="Shrimp.Description" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="color">Color</label>
-                <input type="text" class="form-control" id="color" asp-for="Shrimp.Color" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="family">Family</label>
-                <input type="text" class="form-control" id="family" asp-for="Shrimp.Family" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="featuredImageUrl">Featured Image Url</label>
-                <input type="text" class="form-control" id="featuredImageUrl" asp-for="Shrimp.FeaturedImageUrl" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="urlHandle">Url Handle</label>
-                <input type="text" class="form-control" id="urlHandle" asp-for="Shrimp.UrlHandle" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="publishedDate">Published Date</label>
-                <input type="date" class="form-control" id="publishedDate" asp-for="Shrimp.PublishedDate" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="author">Author</label>
-                <input type="text" class="form-control" id="author" asp-for="Shrimp.Author" />
-            </div>
-
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-inline" id="isVisible" asp-for="Shrimp.IsVisible" />
-                <label class="form-check-label" for="isVisible">Is Visible?</label>
-            </div>
-
-            <div class="mb-3 d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary" asp-page-handler="Edit">Edit</button>
-                <button type="submit" class="btn btn-danger" asp-page-handler="Delete">Delete</button>
-            </div>
-
-        </form>
-    </div>
-</div>
+    @section Scripts {
+        <script>
+            var editor = new FroalaEditor('#description');
+        </script>
+    }
