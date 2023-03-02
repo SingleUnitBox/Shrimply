@@ -4,7 +4,10 @@ namespace Shrimply.Repositories
 {
     public interface IShrimpRepository
     {
-        public Task AddAsync(Shrimp shrimp);
-        public Task<IEnumerable<Shrimp>> GetAllAsync();
+        Task AddAsync(Shrimp shrimp);
+        Task<IEnumerable<Shrimp>> GetAllAsync();
+        Task<Shrimp> GetAsync(Guid id);
+        Task<Shrimp> UpdateAsync (Shrimp shrimp);
+        Task<bool> DeleteAsync (Guid id);
     }
 }
