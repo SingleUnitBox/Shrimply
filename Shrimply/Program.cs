@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddControllers();
 builder.Services.AddDbContext<ShrimplyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ShrimplyConnectionString")));
 
@@ -29,5 +30,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapControllers();
 
 app.Run();
