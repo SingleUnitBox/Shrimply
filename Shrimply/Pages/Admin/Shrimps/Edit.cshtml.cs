@@ -53,6 +53,12 @@ namespace Shrimply.Pages.Admin.Shrimps
                 IsVisible = Shrimp.IsVisible,
             };
             await _shrimpRepository.UpdateAsync(shrimpDomainModel);
+            ViewData["Notification"] = new Notification
+            {
+                Message = "Shrimp successfully edited.",
+                Type = Enums.NotificationType.Success
+            };
+
             return Page();
         }
         public async Task<IActionResult> OnPostDelete()
@@ -63,7 +69,7 @@ namespace Shrimply.Pages.Admin.Shrimps
                 return RedirectToPage("/Admin/Shrimps/List");
             }
             return Page();
-            
+
         }
     }
 }

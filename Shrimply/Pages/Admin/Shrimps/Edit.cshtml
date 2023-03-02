@@ -1,4 +1,5 @@
 ﻿@page "{id:Guid}"
+@using Shrimply.Models.ViewModels;
 @model Shrimply.Pages.Admin.Shrimps.EditModel
 @{
 }
@@ -7,13 +8,15 @@
     <h3>Edit Shrimp</h3>
 </div>
 
+<partial name="_Notification">
+
 <div>
     <div class="container">
         <form method="post">
 
             <div class="mb-3">
                 <label class="form-label" for="name">Id</label>
-                <input type="text" class="form-control" id="name" asp-for="Shrimp.Id" readonly/>
+                <input type="text" class="form-control" id="name" asp-for="Shrimp.Id" readonly />
             </div>
 
             <div class="mb-3">
