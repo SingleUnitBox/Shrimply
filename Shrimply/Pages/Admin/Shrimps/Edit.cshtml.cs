@@ -4,6 +4,7 @@ using Shrimply.Data;
 using Shrimply.Models.Domain;
 using Shrimply.Models.ViewModels;
 using Shrimply.Repositories;
+using System.Text.Json;
 
 namespace Shrimply.Pages.Admin.Shrimps
 {
@@ -39,33 +40,50 @@ namespace Shrimply.Pages.Admin.Shrimps
         }
         public async Task<IActionResult> OnPostEdit()
         {
-            var shrimpDomainModel = new Shrimp
+            try
             {
-                Id = Shrimp.Id,
-                Name = Shrimp.Name,
-                Description = Shrimp.Description,
-                Color = Shrimp.Color,
-                Family = Shrimp.Family,
-                FeaturedImageUrl = Shrimp.FeaturedImageUrl,
-                UrlHandle = Shrimp.UrlHandle,
-                PublishedDate = Shrimp.PublishedDate,
-                Author = Shrimp.Author,
-                IsVisible = Shrimp.IsVisible,
-            };
-            await _shrimpRepository.UpdateAsync(shrimpDomainModel);
-            ViewData["Notification"] = new Notification
+                var shrimpDomainModel = new Shrimp
+                {
+                    Id = Shrimp.Id,
+                    Name = Shrimp.Name,
+                    Description = Shrimp.Description,
+                    Color = Shrimp.Color,
+                    Family = Shrimp.Family,
+                    FeaturedImageUrl = Shrimp.FeaturedImageUrl,
+                    UrlHandle = Shrimp.UrlHandle,
+                    PublishedDate = Shrimp.PublishedDate,
+                    Author = Shrimp.Author,
+                    IsVisible = Shrimp.IsVisible,
+                };
+                await _shrimpRepository.UpdateAsync(shrimpDomainModel);
+                ViewData["Notification"] = new Notification
+                {
+                    Message = "Shrimp successfully edited.",
+                    Type = Enums.NotificationType.Success
+                };
+            }
+            catch (Exception ex)
             {
-                Message = "Shrimp successfully edited.",
-                Type = Enums.NotificationType.Success
-            };
-
+                ViewData["Notification"] = new Notification
+                {
+                    Message = "Something went wrong.",
+                    Type = Enums.NotificationType.Error
+                };
+            }
             return Page();
+
         }
         public async Task<IActionResult> OnPostDelete()
         {
             var deleted = await _shrimpRepository.DeleteAsync(Shrimp.Id);
             if (deleted)
             {
+                var notification = new Notification
+                {
+                    Message = "Shrimp was successfully deleted.",
+                    Type = Enums.NotificationType.Success
+                };
+                TempData["Notification"] = JsonSerializer.Serialize(notification);
                 return RedirectToPage("/Admin/Shrimps/List");
             }
             return Page();

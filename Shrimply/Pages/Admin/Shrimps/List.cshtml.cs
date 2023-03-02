@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shrimply.Models.Domain;
+using Shrimply.Models.ViewModels;
 using Shrimply.Repositories;
+using System.Text.Json;
 
 namespace Shrimply.Pages.Admin.Shrimps
 {
@@ -16,6 +18,11 @@ namespace Shrimply.Pages.Admin.Shrimps
         public async Task OnGet()
         {
             Shrimps = (await _shrimpRepository.GetAllAsync()).ToList();
+            var notificationJson = (string)TempData["Notification"];
+            if (notificationJson != null)
+            {
+                ViewData["Notification"] = JsonSerializer.Deserialize<Notification>(notificationJson);
+            }      
         }
     }
 }
