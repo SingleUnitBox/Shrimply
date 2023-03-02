@@ -4,6 +4,7 @@ using Shrimply.Data;
 using Shrimply.Models.Domain;
 using Shrimply.Models.ViewModels;
 using Shrimply.Repositories;
+using System.Text.Json;
 
 namespace Shrimply.Pages.Admin.Shrimps
 {
@@ -35,6 +36,14 @@ namespace Shrimply.Pages.Admin.Shrimps
                 IsVisible = AddShrimpRequest.IsVisible,
             };
             await _shrimpRepository.AddAsync(shrimp);
+
+            var notification = new Notification
+            {
+                Message = "Shrimp added successfully.",
+                Type = Enums.NotificationType.Success
+            };
+            TempData["Notification"] = JsonSerializer.Serialize(notification);
+
             return RedirectToPage("/Admin/Shrimps/List");
         }
     }
