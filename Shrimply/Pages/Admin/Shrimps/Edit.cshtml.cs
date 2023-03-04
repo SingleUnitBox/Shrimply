@@ -18,6 +18,7 @@ namespace Shrimply.Pages.Admin.Shrimps
         }
         [BindProperty]
         public EditShrimp Shrimp { get; set; }
+        public IFormFile FeaturedImage { get; set; }
         public async Task OnGet(Guid id)
         {
             var shrimpDomainModel = await _shrimpRepository.GetAsync(id);

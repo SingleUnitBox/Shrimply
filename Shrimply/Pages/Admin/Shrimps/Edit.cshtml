@@ -42,6 +42,21 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label" for="featuredImageUpload">Featured Image Upload</label>
+                        <input type="file" id="featuredImageUpload" asp-for="FeaturedImage" />
+
+                        @if (Model.Shrimp.FeaturedImageUrl != null)
+                        {
+                            <img src="@Model.Shrimp.FeaturedImageUrl" id="featuredImageDisplay" style=" width:300px;" />
+                        }
+                        else
+                        {
+                            <img src="" id="featuredImageDisplay" style="display:none; width:300px;" />
+                        }
+                        
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label" for="featuredImageUrl">Featured Image Url</label>
                         <input type="text" class="form-control" id="featuredImageUrl" asp-for="Shrimp.FeaturedImageUrl" />
                     </div>
@@ -85,6 +100,37 @@
 
     @section Scripts {
         <script>
-            var editor = new FroalaEditor('#description');
+            var editor = new FroalaEditor('#description', {
+                imageUploadURL: '/api/images'
+            });
+
+            const featuredImageUploadElement = document.getElementById('featuredImageUpload');
+            const featuredImageUrl = document.getElementById('featuredImageUrl');
+            const featuredImageDisplay = document.getElementById('featuredImageDisplay');
+
+            async function uploadFeaturedImage(e) {
+                console.log(e.target.files[0]);
+
+                let data = new FormData();
+                data.append('file', e.target.files[0]);
+
+                await fetch('/api/images',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Accept': '*/*',
+                        },
+                        body: data
+                    }).then(response => response.json())
+                    .then(result => {
+                        featuredImageUrl.value = result.link;
+                        featuredImageDisplay.style.display = 'block';
+                        featuredImageDisplay.src = result.link;
+                    });
+            }
+
+            featuredImageUploadElement.addEventListener('change', uploadFeaturedImage)
+
+
         </script>
     }
