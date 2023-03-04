@@ -4,7 +4,48 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container col-xxl-8 px-4 py-5">
+    <div class="row align-items-center g-5 py-5">
+        <div class="col-12 col-lg-6">
+            <h1 class="display-5 fw-bold lh-1 mb-3">
+                Shrimply - The Shrimp Blog
+            </h1>
+            <p class="lead">Shrimply is Blog about Caridina Shrimp. You will find virtually any shrimp you think off!</p>
+        </div>
+        <div class="col-12 col-lg-6">
+            <img src="https://res.cloudinary.com/dnxx5drss/image/upload/v1677961702/up8fu36mwsjvepwgrxmn.jpg" width="500"
+                 class="d-block mx-lg-auto img-fluid" />
+        </div>
+    </div>
 </div>
+
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            @if (Model.Shrimps != null && Model.Shrimps.Any())
+            {
+                @foreach (var shrimp in Model.Shrimps)
+                {
+                    <div class="mb-5 bg-light box-shadow">
+                        <img src="@shrimp.FeaturedImageUrl" alt="@shrimp.Name" class="mb-2 d-block img-fluid" width="700" />
+                        <div class="px-4 py-4">
+                            <h2 class="mb-2">@shrimp.Name</h2>
+                            <p>
+                                Author: @shrimp.Author
+                                <br />
+                                Date Published: @shrimp.PublishedDate.ToShortDateString()
+                            </p>
+                            <a href="#" class="btn btn-dark">Read More</a>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Shrimps not Found.</p>
+            }
+        </div>
+    </div>
+</div>
+
