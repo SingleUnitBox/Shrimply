@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shrimply.Repositories;
+using System.Net;
 
 namespace Shrimply.Controllers
 {
@@ -6,11 +8,21 @@ namespace Shrimply.Controllers
     [Route("api/[controller]")]
     public class ImagesController : Controller
     {
+        private readonly IImageRepository _imageRepository;
 
-        [HttpGet]
-        public IActionResult Index()
+        public ImagesController(IImageRepository imageRepository)
         {
-            return Ok("this is the images get method");
+            _imageRepository = imageRepository;
+        }
+        [HttpPost]
+        public async Task<IActionResult> UploadAsync(IFormFile file)
+        {
+            var imageUrl = await _imageRepository.UploadAsync(file);
+            if (imageUrl == null)
+            {
+                return Problem("Something went wrong.", null, (int)HttpStatusCode.InternalServerError);
+            }
+            return Json(new { link = imageUrl });
         }
     }
 }

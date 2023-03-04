@@ -18,6 +18,8 @@ namespace Shrimply.Pages.Admin.Shrimps
         }
         [BindProperty]
         public AddShrimp AddShrimpRequest { get; set; }
+        [BindProperty]
+        public IFormFile FeaturedImage { get; set; }
         public void OnGet()
         {
         }
