@@ -1,0 +1,31 @@
+﻿@page "/shrimp/{urlHandle}"
+@model Shrimply.Pages.Shrimps.DetailsModel
+@{
+    ViewData["Title"] = Model.Shrimp.Name;
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-6">
+            @if (Model.Shrimp != null)
+            {
+                <h1 class="mb-3">@Model.Shrimp.Name</h1>
+
+                <div class="d-flex justify-content-between">
+                    <span class="text-secondary">@Model.Shrimp.Author</span>
+                    <span class="text-secondary">@Model.Shrimp.PublishedDate.ToShortDateString()</span>
+                </div>
+
+                <img src="@Model.Shrimp.FeaturedImageUrl" class="d-block img-fluid mb-3"/>
+
+                <div class="mb-3 blog-details">
+                    @Html.Raw(Model.Shrimp.Description)
+                </div>
+            }
+            else
+            {
+                <h1>Shrimp not found</h1>                
+            }
+        </div>
+    </div>
+</div>

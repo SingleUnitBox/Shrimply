@@ -41,6 +41,12 @@ namespace Shrimply.Repositories
             return shrimp;
         }
 
+        public async Task<Shrimp> GetAsync(string urlHandle)
+        {
+            var shrimp = await _shrimplyDbContext.Shrimps.FirstOrDefaultAsync(x => x.UrlHandle == urlHandle);
+            return shrimp;
+        }
+
         public async Task<Shrimp> UpdateAsync(Shrimp shrimp)
         {
             var existingShrimp = await _shrimplyDbContext.Shrimps.FirstOrDefaultAsync(x => x.Id == shrimp.Id);

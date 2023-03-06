@@ -7,6 +7,7 @@ namespace Shrimply.Repositories
         Task AddAsync(Shrimp shrimp);
         Task<IEnumerable<Shrimp>> GetAllAsync();
         Task<Shrimp> GetAsync(Guid id);
+        Task<Shrimp> GetAsync(string urlHandle);
         Task<Shrimp> UpdateAsync (Shrimp shrimp);
         Task<bool> DeleteAsync (Guid id);
     }

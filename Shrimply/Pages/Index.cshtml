@@ -25,7 +25,7 @@
         <div class="col-6">
             @if (Model.Shrimps != null && Model.Shrimps.Any())
             {
-                @foreach (var shrimp in Model.Shrimps)
+                @foreach ( var shrimp in Model.Shrimps)
                 {
                     <div class="mb-5 bg-light box-shadow">
                         <img src="@shrimp.FeaturedImageUrl" alt="@shrimp.Name" class="mb-2 d-block img-fluid" width="700" />
@@ -36,7 +36,7 @@
                                 <br />
                                 Date Published: @shrimp.PublishedDate.ToShortDateString()
                             </p>
-                            <a href="#" class="btn btn-dark">Read More</a>
+                            <a href="/shrimp/@shrimp.UrlHandle" class="btn btn-dark">Read More</a>
                         </div>
                     </div>
                 }
