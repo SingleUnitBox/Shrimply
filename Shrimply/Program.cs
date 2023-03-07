@@ -12,6 +12,7 @@ builder.Services.AddDbContext<ShrimplyDbContext>(options =>
 
 builder.Services.AddScoped<IShrimpRepository, ShrimpRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 var app = builder.Build();
 

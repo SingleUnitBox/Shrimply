@@ -16,6 +16,17 @@
                     <span class="text-secondary">@Model.Shrimp.PublishedDate.ToShortDateString()</span>
                 </div>
 
+                <div class="mb-3">
+                    @if (Model.Shrimp.Tags != null & Model.Shrimp.Tags.Any())
+                    {
+                        @foreach (var tag in Model.Shrimp.Tags)
+                        {
+                            <span class="badge bg-dark">@tag.Name</span>
+                        }
+                    }
+
+                </div>
+
                 <img src="@Model.Shrimp.FeaturedImageUrl" class="d-block img-fluid mb-3"/>
 
                 <div class="mb-3 blog-details">

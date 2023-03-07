@@ -36,7 +36,7 @@ namespace Shrimply.Pages.Admin.Shrimps
                     PublishedDate = shrimpDomainModel.PublishedDate,
                     Author = shrimpDomainModel.Author,
                     IsVisible = shrimpDomainModel.IsVisible,
-                    //TagsString = string.Join(", ", shrimpDomainModel.Tags.Select(x => x.Name))
+                    TagsString = string.Join(", ", shrimpDomainModel.Tags.Select(x => x.Name))
                 };
             }
         }
@@ -57,7 +57,7 @@ namespace Shrimply.Pages.Admin.Shrimps
                     PublishedDate = Shrimp.PublishedDate,
                     Author = Shrimp.Author,
                     IsVisible = Shrimp.IsVisible,
-                    //Tags = new List<Tag>(Shrimp.TagsString.Split(',').Select(x => new Tag() { Name = x.Trim() }))
+                    Tags = new List<Tag>(Shrimp.TagsString.Split(',').Select(x => new Tag() { Name = x.Trim() }))
                 };
                 await _shrimpRepository.UpdateAsync(shrimpDomainModel);
                 ViewData["Notification"] = new Notification

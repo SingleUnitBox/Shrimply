@@ -9,17 +9,24 @@ namespace Shrimply.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IShrimpRepository _shrimpRepository;
-        public List<Shrimp> Shrimps { get; set; }
+        private readonly ITagRepository _tagRepository;
 
-        public IndexModel(ILogger<IndexModel> logger, IShrimpRepository shrimpRepository)
+        public List<Shrimp> Shrimps { get; set; }
+        public List<Tag> Tags { get; set; }
+
+        public IndexModel(ILogger<IndexModel> logger,
+            IShrimpRepository shrimpRepository,
+            ITagRepository tagRepository)
         {
             _logger = logger;
             _shrimpRepository = shrimpRepository;
+            _tagRepository = tagRepository;
         }
 
         public async Task<IActionResult> OnGet()
         {
             Shrimps = (await _shrimpRepository.GetAllAsync()).ToList();
+            Tags = (await _tagRepository.GetAllAsync()).ToList();
             return Page();
         }
     }

@@ -23,6 +23,18 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-6">
+
+            <div class="mb-3">
+                @if (Model.Tags != null & Model.Tags.Any())
+                {
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <span class="badge bg-dark">@tag.Name</span>    
+                    }
+                }
+                
+            </div>
+
             @if (Model.Shrimps != null && Model.Shrimps.Any())
             {
                 @foreach ( var shrimp in Model.Shrimps)
