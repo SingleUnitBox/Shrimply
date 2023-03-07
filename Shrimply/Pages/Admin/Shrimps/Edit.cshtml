@@ -76,6 +76,11 @@
                         <input type="text" class="form-control" id="author" asp-for="Shrimp.Author" />
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label" for="tags">Tags (comma separated)</label>
+                        <input type="text" class="form-control" id="tags" asp-for="Shrimp.TagsString" />
+                    </div>
+
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-inline" id="isVisible" asp-for="Shrimp.IsVisible" />
                         <label class="form-check-label" for="isVisible">Is Visible?</label>

@@ -66,6 +66,40 @@ namespace Shrimply.Migrations
 
                     b.ToTable("Shrimps");
                 });
+
+            modelBuilder.Entity("Shrimply.Models.Domain.Tag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ShrimpId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShrimpId");
+
+                    b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("Shrimply.Models.Domain.Tag", b =>
+                {
+                    b.HasOne("Shrimply.Models.Domain.Shrimp", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("ShrimpId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Shrimply.Models.Domain.Shrimp", b =>
+                {
+                    b.Navigation("Tags");
+                });
 #pragma warning restore 612, 618
         }
     }

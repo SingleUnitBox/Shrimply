@@ -28,10 +28,37 @@ namespace Shrimply.Migrations
                 {
                     table.PrimaryKey("PK_Shrimps", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShrimpId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tags_Shrimps_ShrimpId",
+                        column: x => x.ShrimpId,
+                        principalTable: "Shrimps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_ShrimpId",
+                table: "Tags",
+                column: "ShrimpId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Tags");
+
             migrationBuilder.DropTable(
                 name: "Shrimps");
         }

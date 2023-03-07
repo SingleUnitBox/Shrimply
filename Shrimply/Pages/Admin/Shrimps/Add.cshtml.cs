@@ -25,6 +25,7 @@ namespace Shrimply.Pages.Admin.Shrimps
         }
         public async Task<IActionResult> OnPost()
         {
+
             var shrimp = new Shrimp
             {
                 Name = AddShrimpRequest.Name,
@@ -36,6 +37,8 @@ namespace Shrimply.Pages.Admin.Shrimps
                 PublishedDate = AddShrimpRequest.PublishedDate,
                 Author = AddShrimpRequest.Author,
                 IsVisible = AddShrimpRequest.IsVisible,
+                Tags = new List<Tag>(AddShrimpRequest.TagsString.Split(',').Select(x => new Tag() { Name = x.Trim() }))
+                
             };
             await _shrimpRepository.AddAsync(shrimp);
 
