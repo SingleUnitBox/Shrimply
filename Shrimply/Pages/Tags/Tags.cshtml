@@ -1,45 +1,38 @@
-﻿@page
-@model IndexModel
+﻿@page "/tags/{tagName}"
+@model Shrimply.Pages.TagsModel
 @{
-    ViewData["Title"] = "Home page";
+}
+
+@if (Model.Tag != null)
+{
+    ViewData["Title"] = @Model.Tag.Name;
+}
+else
+{
+    ViewData["Title"] = "Tag does not exist";
 }
 
 <div class="container col-xxl-8 px-4 py-5">
     <div class="row align-items-center g-5 py-5">
         <div class="col-12 col-lg-6">
             <h1 class="display-5 fw-bold lh-1 mb-3">
-                Shrimply - The Shrimp Blog
+                @if (Model.Tag != null)
+                {
+                    @Model.Tag.Name
+                }
             </h1>
-            <p class="lead">Shrimply is Blog about Caridina Shrimp. You will find virtually any shrimp you think off!</p>
-        </div>
-        <div class="col-12 col-lg-6">
-            <img src="https://res.cloudinary.com/dnxx5drss/image/upload/v1677961702/up8fu36mwsjvepwgrxmn.jpg" width="500"
-                 class="d-block mx-lg-auto img-fluid" />
         </div>
     </div>
 </div>
-
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-6">
 
-            <div class="mb-3">
-                @if (Model.Tags != null & Model.Tags.Any())
-                {
-                    @foreach (var tag in Model.Tags)
-                    {
-                        <a href="/tags/@tag.Name">
-                            <span class="badge bg-dark">@tag.Name</span>
-                        </a>   
-                    }
-                }
-                
-            </div>
 
             @if (Model.Shrimps != null && Model.Shrimps.Any())
             {
-                @foreach ( var shrimp in Model.Shrimps)
+                @foreach (var shrimp in Model.Shrimps)
                 {
                     <div class="mb-5 bg-light box-shadow">
                         <img src="@shrimp.FeaturedImageUrl" alt="@shrimp.Name" class="mb-2 d-block img-fluid" width="700" />
@@ -62,4 +55,3 @@
         </div>
     </div>
 </div>
-

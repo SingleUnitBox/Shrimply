@@ -21,13 +21,15 @@
                     {
                         @foreach (var tag in Model.Shrimp.Tags)
                         {
-                            <span class="badge bg-dark">@tag.Name</span>
+                            <a href="/tags/@tag.Name">
+                                <span class="badge bg-dark">@tag.Name</span>
+                            </a>
                         }
                     }
 
                 </div>
 
-                <img src="@Model.Shrimp.FeaturedImageUrl" class="d-block img-fluid mb-3"/>
+                <img src="@Model.Shrimp.FeaturedImageUrl" class="d-block img-fluid mb-3" />
 
                 <div class="mb-3 blog-details">
                     @Html.Raw(Model.Shrimp.Description)
@@ -35,7 +37,7 @@
             }
             else
             {
-                <h1>Shrimp not found</h1>                
+                <h1>Shrimp not found</h1>
             }
         </div>
     </div>

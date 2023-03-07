@@ -17,5 +17,11 @@ namespace Shrimply.Repositories
             var tags = await _shrimplyDbContext.Tags.ToListAsync();
             return tags.DistinctBy(x => x.Name.ToLower());
         }
+
+        public async Task<Tag> GetAsync(string tagName)
+        {
+            var tag = await _shrimplyDbContext.Tags.FirstOrDefaultAsync(x => x.Name == tagName);
+            return tag;
+        }
     }
 }

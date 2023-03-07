@@ -31,7 +31,15 @@ namespace Shrimply.Repositories
 
         public async Task<IEnumerable<Shrimp>> GetAllAsync()
         {
-            var shrimps = await _shrimplyDbContext.Shrimps.Include("Tags")
+            var shrimps = await _shrimplyDbContext.Shrimps.Include(nameof(Shrimp.Tags))
+                .ToListAsync();
+            return shrimps;
+        }
+
+        public async Task<IEnumerable<Shrimp>> GetAllAsync(string tagName)
+        {
+            var shrimps = await _shrimplyDbContext.Shrimps.Include(nameof(Shrimp.Tags))
+                .Where(x => x.Tags.Any(x => x.Name == tagName))
                 .ToListAsync();
             return shrimps;
         }
