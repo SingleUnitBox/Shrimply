@@ -30,6 +30,12 @@ builder.Services.AddScoped<IShrimpRepository, ShrimpRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Login";
+    options.AccessDeniedPath = "/AccessDenied";
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -51,6 +51,8 @@ namespace Shrimply.Data
                 Id = superAdminId,
                 UserName = "superadmin@shrimply.com",
                 Email = "superadmin@shrimply.com",
+                NormalizedEmail = "superadmin@shrimply.com".ToUpper(),
+                NormalizedUserName = "superadmin@shrimply.com".ToUpper(),
             };
             superAdminUser.PasswordHash = new PasswordHasher<IdentityUser>()
                 .HashPassword(superAdminUser, "czcz");

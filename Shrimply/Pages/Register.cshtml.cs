@@ -29,12 +29,15 @@ namespace Shrimply.Pages
 
             if (identityResult.Succeeded)
             {
-                ViewData["Notification"] = new Notification
-                { 
-                    Message = "User has been successfully registered.",
-                    Type = Enums.NotificationType.Success
-                };
-
+                var addRolesResult = await _userManager.AddToRoleAsync(user, "User");
+                if (addRolesResult.Succeeded)
+                {
+                    ViewData["Notification"] = new Notification
+                    {
+                        Message = "User has been successfully registered.",
+                        Type = Enums.NotificationType.Success
+                    };
+                }
                 return Page();
             }
             ViewData["Notification"] = new Notification

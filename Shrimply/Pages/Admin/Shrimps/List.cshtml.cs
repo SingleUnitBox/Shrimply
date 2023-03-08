@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shrimply.Models.Domain;
@@ -7,6 +8,7 @@ using System.Text.Json;
 
 namespace Shrimply.Pages.Admin.Shrimps
 {
+    [Authorize(Roles = "Admin")]
     public class ListModel : PageModel
     {
         private readonly IShrimpRepository _shrimpRepository;
