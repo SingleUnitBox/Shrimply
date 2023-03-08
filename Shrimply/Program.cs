@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shrimply.Data;
 using Shrimply.Repositories;
@@ -9,6 +10,12 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ShrimplyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ShrimplyConnectionString")));
+
+builder.Services.AddDbContext<AuthDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ShrimplyAuthConnectionString")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<AuthDbContext>();
 
 builder.Services.AddScoped<IShrimpRepository, ShrimpRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
@@ -29,6 +36,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
