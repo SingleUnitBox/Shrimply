@@ -23,9 +23,15 @@ namespace Shrimply.Repositories
             await _shrimplyDbContext.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Like>> GetLikesForShrimp(Guid shrimpId)
+        {
+            var likes = await _shrimplyDbContext.Like.Where(x => x.ShrimpId == shrimpId)
+                .ToListAsync();
+            return likes;
+        }
+
         public async Task<int> GetTotalLikesForShrimp(Guid shrimpId)
         {
-
             return await _shrimplyDbContext.Like.CountAsync(x => x.ShrimpId == shrimpId);
         }
     }
