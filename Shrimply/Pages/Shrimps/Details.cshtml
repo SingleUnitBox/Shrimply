@@ -1,5 +1,9 @@
 ﻿@page "/shrimp/{urlHandle}"
 @model Shrimply.Pages.Shrimps.DetailsModel
+
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<IdentityUser> userManager;
+
 @{
     ViewData["Title"] = Model.Shrimp.Name;
 }
@@ -14,6 +18,16 @@
                 <div class="d-flex justify-content-between">
                     <span class="text-secondary">@Model.Shrimp.Author</span>
                     <span class="text-secondary">@Model.Shrimp.PublishedDate.ToShortDateString()</span>
+                </div>
+
+                <div class="mb-3">
+                    <span>
+                        <a id="btnLike" style="cursor: pointer">
+                            <i class="bi bi-hand-thumbs-up"></i>
+                        </a>
+                        <span id="totalLikes">@Model.TotalLikes </span>
+                        likes
+                    </span>
                 </div>
 
                 <div class="mb-3">
@@ -42,3 +56,25 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+<script>
+    const btnLike = document.getElementById('btnLike');
+
+    async function addLike() {
+
+        fetch('/api/like/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+            body: JSON.stringify({ shrimpId : '@Model.Shrimp.Id', userId : '@userManager.GetUserId(User)'})
+        })
+            .then(console.log('request finished'));
+    }
+
+    btnLike.addEventListener('click', addLike);
+
+</script>
+}

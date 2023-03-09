@@ -29,6 +29,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddScoped<IShrimpRepository, ShrimpRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<IShrimpLikeRepository, ShrimpLikeRepository>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
