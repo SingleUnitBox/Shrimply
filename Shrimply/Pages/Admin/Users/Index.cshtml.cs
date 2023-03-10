@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,6 +8,7 @@ using System.Text.Json;
 
 namespace Shrimply.Pages.Admin.Users
 {
+    [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         private readonly IUserRepository _userRepository;
@@ -14,6 +16,8 @@ namespace Shrimply.Pages.Admin.Users
         [BindProperty]
         public AddUser AddUser { get; set; }
         public List<User> Users { get; set; }
+        [BindProperty]
+        public Guid SelectedUserId { get; set; }
         public IndexModel(IUserRepository userRepository,
             UserManager<IdentityUser> userManager)
         {
@@ -67,6 +71,19 @@ namespace Shrimply.Pages.Admin.Users
                 return RedirectToPage("/Admin/Users/Index");
             }
             return Page();
+        }
+        public async Task<IActionResult> OnPostDelete()
+        {
+            await _userRepository.Delete(SelectedUserId);
+
+            var notification = new Notification
+            {
+                Message = "User successfully deleted.",
+                Type = Enums.NotificationType.Success
+            };
+            TempData["Notification"] = JsonSerializer.Serialize(notification);
+
+            return RedirectToPage("/Admin/Users/Index");
         }
     }
 }

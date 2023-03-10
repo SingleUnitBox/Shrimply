@@ -66,25 +66,50 @@
         </div>
     </form>
     <div>
-        <div class="container">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in Model.Users)
-                    {
+        <form method="post" asp-page-handler="delete" id="deleteUserForm">
+            <div class="container">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>@user.Id</td>
-                            <td>@user.Email</td>
-                            <td><a href="/Admin/Shrimps/Edit/" class="btn btn-primary">View</a></td>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <td>@user.Id</td>
+                                <td>@user.Email</td>
+                                <td>
+                                    <a class="btn btn-danger user-delete-btn" data-id="@user.Id">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <input type="hidden" asp-for="SelectedUserId" id="selectedUserId"/>
+        </form>
+
+
     </div>
+
+    @section Scripts
+        {
+        <script>
+            const userDeleteElements = document.querySelectorAll('.user-delete-btn');
+            const selectedUserIdElement = document.getElementById('selectedUserId');
+            const deleteUserFormElement = document.getElementById('deleteUserForm');
+
+            userDeleteElements.forEach((element) => {
+
+                element.addEventListener('click', function () {
+                    const userId = element.dataset.id;
+                    selectedUserIdElement.value = userId;
+                    deleteUserFormElement.submit();
+                })
+            })
+        </script>
+    }
