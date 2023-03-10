@@ -11,5 +11,6 @@ namespace Shrimply.Data
         public DbSet<Shrimp> Shrimps { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Like> Like { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }

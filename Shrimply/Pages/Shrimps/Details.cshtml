@@ -6,106 +6,164 @@
 @inject SignInManager<IdentityUser> signInManager;
 
 @{
-    ViewData["Title"] = Model.Shrimp.Name;
+    ViewData["Title"] = @Model.Shrimp.Name;
 }
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-6">
-            @if (Model.Shrimp != null)
-            {
-                <h1 class="mb-3">@Model.Shrimp.Name</h1>
+<partial name="_Notification">
 
-                <div class="d-flex justify-content-between">
-                    <span class="text-secondary">@Model.Shrimp.Author</span>
-                    <span class="text-secondary">@Model.Shrimp.PublishedDate.ToShortDateString()</span>
-                </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-6">
+                @if (Model.Shrimp != null)
+                {
+                    <h1 class="mb-3">@Model.Shrimp.Name</h1>
+
+                    <div class="d-flex justify-content-between">
+                        <span class="text-secondary">@Model.Shrimp.Author</span>
+                        <span class="text-secondary">@Model.Shrimp.PublishedDate.ToShortDateString()</span>
+                    </div>
 
 
-                <div class="mb-3">
-                    <span>
-                        @if (signInManager.IsSignedIn(User))
-                        {
-                            @if (Model.Liked)
+                    <div class="mb-3">
+                        <span>
+                            @if (signInManager.IsSignedIn(User))
                             {
-                                <i class="bi bi-hand-thumbs-up-fill"></i>
+                                @if (Model.Liked)
+                                {
+                                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                                }
+                                else
+                                {
+                                    <a id="btnLike" style="cursor: pointer">
+                                        <i class="bi bi-hand-thumbs-up"></i>
+                                    </a>
+                                }
                             }
-                            else
+                            <span id="totalLikes">@Model.TotalLikes</span>
+                            likes
+                        </span>
+                    </div>
+
+
+
+                    <div class="mb-3">
+                        @if (Model.Shrimp.Tags != null & Model.Shrimp.Tags.Any())
+                        {
+                            @foreach (var tag in Model.Shrimp.Tags)
                             {
-                                <a id="btnLike" style="cursor: pointer">
-                                    <i class="bi bi-hand-thumbs-up"></i>
+                                <a href="/tags/@tag.Name">
+                                    <span class="badge bg-dark">@tag.Name</span>
                                 </a>
                             }
                         }
-                        <span id="totalLikes">@Model.TotalLikes</span>
-                        likes
-                    </span>
-                </div>
 
+                    </div>
 
+                    <img src="@Model.Shrimp.FeaturedImageUrl" class="d-block img-fluid mb-3" />
 
-                <div class="mb-3">
-                    @if (Model.Shrimp.Tags != null & Model.Shrimp.Tags.Any())
+                    <div class="mb-3 blog-details">
+                        @Html.Raw(Model.Shrimp.Description)
+                    </div>
+                    @if (signInManager.IsSignedIn(User))
                     {
-                        @foreach (var tag in Model.Shrimp.Tags)
-                        {
-                            <a href="/tags/@tag.Name">
-                                <span class="badge bg-dark">@tag.Name</span>
-                            </a>
-                        }
+                        <div class="card">
+
+                            <div class="card-header">
+
+                                <h1 class="h3">Comments</h1>
+
+                                <form method="post">
+                                    <div class="mb-3">
+                                        <label class="form-label" id="">Title</label>
+                                        <input type="text" class="form-control" asp-for=AddCommentRequest.Title>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label" id="">Content</label>
+                                        <textarea class="form-control" asp-for=AddCommentRequest.Content></textarea>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <input type="hidden" asp-for=ShrimpIdRequest>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <button type="submit" class="btn btn-dark">Comment</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                            <div class="card-body">
+                                @if (Model.Comments != null && Model.Comments.Any())
+                                {
+                                    @foreach (var comment in Model.Comments)
+                                    {
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+
+                                                <h5 class="card-title">@comment.Title</h5>
+                                                <p class="card-text">@comment.Content</p>
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="text-secondary">@comment.Username</span>
+                                                    <span class="text-secondary">@comment.DatePublished.ToShortDateString()</span>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>No comments.</p>
+                                }
+
+                            </div>
+                        </div>
                     }
-
-                </div>
-
-                <img src="@Model.Shrimp.FeaturedImageUrl" class="d-block img-fluid mb-3" />
-
-                <div class="mb-3 blog-details">
-                    @Html.Raw(Model.Shrimp.Description)
-                </div>
-            }
-            else
-            {
-                <h1>Shrimp not found</h1>
-            }
+                }
+                else
+                {
+                    <h1>Shrimp not found</h1>
+                }
+            </div>
         </div>
     </div>
-</div>
 
-@section Scripts {
-    <script>
-        const btnLike = document.getElementById('btnLike');
-        const totalLikesElement = document.getElementById('totalLikes');
+    @section Scripts {
+        <script>
+            const btnLike = document.getElementById('btnLike');
+            const totalLikesElement = document.getElementById('totalLikes');
 
-        async function getTotalLikes() {
-            fetch('/api/like/@Model.Shrimp.Id/totalLikes', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': '*/*'
-                }
-            })
-                .then(data => data.json())
-                .then(result => totalLikesElement.innerHTML = result);
-        }
+            async function getTotalLikes() {
+                fetch('/api/like/@Model.Shrimp.Id/totalLikes', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': '*/*'
+                    }
+                })
+                    .then(data => data.json())
+                    .then(result => totalLikesElement.innerHTML = result);
+            }
 
-        async function addLike() {
+            async function addLike() {
 
-            fetch('/api/like/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': '*/*'
-                },
-                body: JSON.stringify({ shrimpId: '@Model.Shrimp.Id', userId: '@userManager.GetUserId(User)' })
-            })
-                .then(() => {
-                    btnLike.innerHTML = '<i class="bi bi-hand-thumbs-up-fill"></i>';
-                    btnLike.removeEventListener('click', addLike);
-                    getTotalLikes();
-                });
-        }
+                fetch('/api/like/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': '*/*'
+                    },
+                    body: JSON.stringify({ shrimpId: '@Model.Shrimp.Id', userId: '@userManager.GetUserId(User)' })
+                })
+                    .then(() => {
+                        btnLike.innerHTML = '<i class="bi bi-hand-thumbs-up-fill"></i>';
+                        btnLike.removeEventListener('click', addLike);
+                        getTotalLikes();
+                    });
+            }
 
-        btnLike.addEventListener('click', addLike);
+            btnLike.addEventListener('click', addLike);
 
-    </script>
-}
+        </script>
+    }

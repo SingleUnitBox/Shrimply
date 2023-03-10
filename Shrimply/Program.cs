@@ -30,6 +30,7 @@ builder.Services.AddScoped<IShrimpRepository, ShrimpRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IShrimpLikeRepository, ShrimpLikeRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
