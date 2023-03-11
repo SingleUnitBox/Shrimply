@@ -21,37 +21,55 @@ namespace Shrimply.Pages.Admin.Shrimps
         [BindProperty]
         public AddShrimp AddShrimpRequest { get; set; }
         [BindProperty]
-        public IFormFile FeaturedImage { get; set; }
+        public IFormFile? FeaturedImage { get; set; }
         public void OnGet()
         {
         }
         public async Task<IActionResult> OnPost()
         {
-
-            var shrimp = new Shrimp
+            ValidateShrimp();
+            if (ModelState.IsValid)
             {
-                Name = AddShrimpRequest.Name,
-                Description = AddShrimpRequest.Description,
-                Color = AddShrimpRequest.Color,
-                Family = AddShrimpRequest.Family,
-                FeaturedImageUrl = AddShrimpRequest.FeaturedImageUrl,
-                UrlHandle = AddShrimpRequest.UrlHandle,
-                PublishedDate = AddShrimpRequest.PublishedDate,
-                Author = AddShrimpRequest.Author,
-                IsVisible = AddShrimpRequest.IsVisible,
-                Tags = new List<Tag>(AddShrimpRequest.TagsString.Split(',').Select(x => new Tag() { Name = x.Trim() }))
-                
-            };
-            await _shrimpRepository.AddAsync(shrimp);
+                var shrimp = new Shrimp
+                {
+                    Name = AddShrimpRequest.Name,
+                    Description = AddShrimpRequest.Description,
+                    Color = AddShrimpRequest.Color,
+                    Family = AddShrimpRequest.Family,
+                    FeaturedImageUrl = AddShrimpRequest.FeaturedImageUrl,
+                    UrlHandle = AddShrimpRequest.UrlHandle,
+                    PublishedDate = AddShrimpRequest.PublishedDate,
+                    Author = AddShrimpRequest.Author,
+                    IsVisible = AddShrimpRequest.IsVisible,
+                    Tags = new List<Tag>(AddShrimpRequest.TagsString.Split(',').Select(x => new Tag() { Name = x.Trim() }))
 
-            var notification = new Notification
+                };
+                await _shrimpRepository.AddAsync(shrimp);
+
+                var notification = new Notification
+                {
+                    Message = "Shrimp added successfully.",
+                    Type = Enums.NotificationType.Success
+                };
+                TempData["Notification"] = JsonSerializer.Serialize(notification);
+
+                return RedirectToPage("/Admin/Shrimps/List");
+            }
+            ViewData["Notification"] = new Notification
             {
-                Message = "Shrimp added successfully.",
-                Type = Enums.NotificationType.Success
+                Message = "Please fill in form",
+                Type = Enums.NotificationType.Error
             };
-            TempData["Notification"] = JsonSerializer.Serialize(notification);
-
-            return RedirectToPage("/Admin/Shrimps/List");
+            return Page();
+            
+        }
+        private void ValidateShrimp()
+        {
+            if (AddShrimpRequest.PublishedDate.Date < DateTime.Now.Date)
+            {
+                ModelState.AddModelError("AddShrimpRequest.PublishedDate",
+                    $"{nameof(AddShrimpRequest.PublishedDate)} can only be today/future date.");
+            }
         }
     }
 }

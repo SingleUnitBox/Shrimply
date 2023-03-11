@@ -20,7 +20,7 @@ namespace Shrimply.Pages.Admin.Shrimps
         }
         [BindProperty]
         public EditShrimp Shrimp { get; set; }
-        public IFormFile FeaturedImage { get; set; }
+        public IFormFile? FeaturedImage { get; set; }
         public async Task OnGet(Guid id)
         {
             var shrimpDomainModel = await _shrimpRepository.GetAsync(id);
@@ -44,40 +44,43 @@ namespace Shrimply.Pages.Admin.Shrimps
         }
         public async Task<IActionResult> OnPostEdit()
         {
-            try
+            ValidateEditShrimp();
+            if (ModelState.IsValid)
             {
-
-                var shrimpDomainModel = new Shrimp
+                try
                 {
-                    Id = Shrimp.Id,
-                    Name = Shrimp.Name,
-                    Description = Shrimp.Description,
-                    Color = Shrimp.Color,
-                    Family = Shrimp.Family,
-                    FeaturedImageUrl = Shrimp.FeaturedImageUrl,
-                    UrlHandle = Shrimp.UrlHandle,
-                    PublishedDate = Shrimp.PublishedDate,
-                    Author = Shrimp.Author,
-                    IsVisible = Shrimp.IsVisible,
-                    Tags = new List<Tag>(Shrimp.TagsString.Split(',').Select(x => new Tag() { Name = x.Trim() }))
-                };
-                await _shrimpRepository.UpdateAsync(shrimpDomainModel);
-                ViewData["Notification"] = new Notification
+                    var shrimpDomainModel = new Shrimp
+                    {
+                        Id = Shrimp.Id,
+                        Name = Shrimp.Name,
+                        Description = Shrimp.Description,
+                        Color = Shrimp.Color,
+                        Family = Shrimp.Family,
+                        FeaturedImageUrl = Shrimp.FeaturedImageUrl,
+                        UrlHandle = Shrimp.UrlHandle,
+                        PublishedDate = Shrimp.PublishedDate,
+                        Author = Shrimp.Author,
+                        IsVisible = Shrimp.IsVisible,
+                        Tags = new List<Tag>(Shrimp.TagsString.Split(',').Select(x => new Tag() { Name = x.Trim() }))
+                    };
+                    await _shrimpRepository.UpdateAsync(shrimpDomainModel);
+                    ViewData["Notification"] = new Notification
+                    {
+                        Message = "Shrimp successfully edited.",
+                        Type = Enums.NotificationType.Success
+                    };
+                }
+                catch (Exception ex)
                 {
-                    Message = "Shrimp successfully edited.",
-                    Type = Enums.NotificationType.Success
-                };
-            }
-            catch (Exception ex)
-            {
-                ViewData["Notification"] = new Notification
-                {
-                    Message = "Something went wrong.",
-                    Type = Enums.NotificationType.Error
-                };
+                    ViewData["Notification"] = new Notification
+                    {
+                        Message = "Something went wrong.",
+                        Type = Enums.NotificationType.Error
+                    };
+                }
+                return Page();
             }
             return Page();
-
         }
         public async Task<IActionResult> OnPostDelete()
         {
@@ -94,6 +97,14 @@ namespace Shrimply.Pages.Admin.Shrimps
             }
             return Page();
 
+        }
+        private void ValidateEditShrimp()
+        {
+            if (Shrimp.PublishedDate.Date < DateTime.Now.Date)
+            {
+                ModelState.AddModelError("Shrimp.PublishedDate",
+                    $"{nameof(Shrimp.PublishedDate)} can only be today/future date.");
+            }
         }
     }
 }
