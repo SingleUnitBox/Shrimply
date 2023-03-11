@@ -5,17 +5,16 @@
 @inject UserManager<IdentityUser> userManager;
 @inject SignInManager<IdentityUser> signInManager;
 
-@{
-    ViewData["Title"] = @Model.Shrimp.Name;
-}
-
 <partial name="_Notification">
+    @if (Model.Shrimp != null)
+    {
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-6">
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-lg-6">
-                @if (Model.Shrimp != null)
-                {
+
+                    ViewData["Title"] = @Model.Shrimp.Name;
+
                     <h1 class="mb-3">@Model.Shrimp.Name</h1>
 
                     <div class="d-flex justify-content-between">
@@ -76,11 +75,13 @@
                                     <div class="mb-3">
                                         <label class="form-label" id="">Title</label>
                                         <input type="text" class="form-control" asp-for=AddCommentRequest.Title>
+                                        <span class="text-danger" asp-validation-for="AddCommentRequest.Title"></span>
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label" id="">Content</label>
                                         <textarea class="form-control" asp-for=AddCommentRequest.Content></textarea>
+                                        <span class="text-danger" asp-validation-for="AddCommentRequest.Content"></span>
                                     </div>
 
                                     <div class="mb-3">
@@ -120,16 +121,12 @@
                             </div>
                         </div>
                     }
-                }
-                else
-                {
-                    <h1>Shrimp not found</h1>
-                }
+
+                </div>
             </div>
         </div>
-    </div>
 
-    @section Scripts {
+        @section Scripts {
         <script>
             const btnLike = document.getElementById('btnLike');
             const totalLikesElement = document.getElementById('totalLikes');
@@ -167,3 +164,13 @@
 
         </script>
     }
+    }
+    else
+
+    {
+        <h1>Shrimp not found</h1>
+    }
+
+
+
+

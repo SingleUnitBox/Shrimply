@@ -44,55 +44,45 @@ namespace Shrimply.Pages.Shrimps
                 ViewData["Notification"] = JsonSerializer.Deserialize<Notification>(notificationJson);
             }
 
-            Shrimp = await _shrimpRepository.GetAsync(urlHandle);
-            if (Shrimp != null)
-            {
-                ShrimpIdRequest = Shrimp.Id;
-                if (_signInManager.IsSignedIn(User))
-                {
-                    var likes = await _shrimpLikeRepository.GetLikesForShrimp(Shrimp.Id);
-                    var userId = _userManager.GetUserId(User);
-
-                    Liked = likes.Any(x => x.UserId == Guid.Parse(userId));
-                    await GetComments();
-                    
-                }
-                
-                TotalLikes = await _shrimpLikeRepository.GetTotalLikesForShrimp(Shrimp.Id);
-            }
+            await GetShrimp(urlHandle);
             return Page();
         }
         public async Task<IActionResult> OnPost(string urlHandle)
         {
-            if (_signInManager.IsSignedIn(User))
+            if (ModelState.IsValid)
             {
-                var userId = _userManager.GetUserId(User);
-                var comment = new Comment
+                if (_signInManager.IsSignedIn(User))
                 {
-                    Title = AddCommentRequest.Title,
-                    Content = AddCommentRequest.Content,
-                    ShrimpId = ShrimpIdRequest,
-                    UserId = Guid.Parse(userId),
-                    DatePublished = DateTime.UtcNow,
-                    
-                };
-                await _commentRepository.AddAsync(comment);
+                    var userId = _userManager.GetUserId(User);
+                    var comment = new Comment
+                    {
+                        Title = AddCommentRequest.Title,
+                        Content = AddCommentRequest.Content,
+                        ShrimpId = ShrimpIdRequest,
+                        UserId = Guid.Parse(userId),
+                        DatePublished = DateTime.UtcNow,
 
-                var notification = new Notification
+                    };
+                    await _commentRepository.AddAsync(comment);
+
+                    var notification = new Notification
+                    {
+                        Message = "Comment added successfully.",
+                        Type = Enums.NotificationType.Success
+                    };
+                    TempData["Notification"] = JsonSerializer.Serialize(notification);
+
+                    return RedirectToPage("/Shrimps/Details", new { urlHandle = urlHandle });
+
+                }
+                ViewData["Notification"] = new Notification
                 {
-                    Message = "Comment added successfully.",
-                    Type = Enums.NotificationType.Success
+                    Message = "Cannot add comment",
+                    Type = Enums.NotificationType.Error
                 };
-                TempData["Notification"] = JsonSerializer.Serialize(notification);
-
-                return RedirectToPage("/Shrimps/Details", new { urlHandle = urlHandle} );
-
+                return Page();
             }
-            ViewData["Notification"] = new Notification
-            {
-                Message = "Cannot add comment",
-                Type = Enums.NotificationType.Error
-            };
+            await GetShrimp(urlHandle);
             return Page();
 
         }
@@ -110,6 +100,24 @@ namespace Shrimply.Pages.Shrimps
                     Username = (await _userManager.FindByIdAsync(comment.UserId.ToString())).UserName
                 });
                 Comments = shrimpCommentsViewModel;
+            }
+        }
+        private async Task GetShrimp(string urlHandle)
+        {
+            Shrimp = await _shrimpRepository.GetAsync(urlHandle);
+            if (Shrimp != null)
+            {
+                ShrimpIdRequest = Shrimp.Id;
+                if (_signInManager.IsSignedIn(User))
+                {
+                    var likes = await _shrimpLikeRepository.GetLikesForShrimp(Shrimp.Id);
+                    var userId = _userManager.GetUserId(User);
+
+                    Liked = likes.Any(x => x.UserId == Guid.Parse(userId));
+                    await GetComments();
+                }
+
+                TotalLikes = await _shrimpLikeRepository.GetTotalLikesForShrimp(Shrimp.Id);
             }
         }
     }
