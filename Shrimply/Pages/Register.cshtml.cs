@@ -20,32 +20,39 @@ namespace Shrimply.Pages
         }
         public async Task<IActionResult> OnPost()
         {
-            var user = new IdentityUser
+            if (ModelState.IsValid)
             {
-                UserName = RegisterViewModel.Username,
-                Email = RegisterViewModel.Email,
-            };
-            var identityResult = await _userManager.CreateAsync(user, RegisterViewModel.Password);
-
-            if (identityResult.Succeeded)
-            {
-                var addRolesResult = await _userManager.AddToRoleAsync(user, "User");
-                if (addRolesResult.Succeeded)
+                var user = new IdentityUser
                 {
-                    ViewData["Notification"] = new Notification
+                    UserName = RegisterViewModel.Username,
+                    Email = RegisterViewModel.Email,
+                };
+                var identityResult = await _userManager.CreateAsync(user, RegisterViewModel.Password);
+
+                if (identityResult.Succeeded)
+                {
+                    var addRolesResult = await _userManager.AddToRoleAsync(user, "User");
+                    if (addRolesResult.Succeeded)
                     {
-                        Message = "User has been successfully registered.",
-                        Type = Enums.NotificationType.Success
-                    };
+                        ViewData["Notification"] = new Notification
+                        {
+                            Message = "User has been successfully registered.",
+                            Type = Enums.NotificationType.Success
+                        };
+                    }
+                    return Page();
                 }
-                return Page();
             }
+
+
             ViewData["Notification"] = new Notification
             {
                 Message = "Something went wrong.",
                 Type = Enums.NotificationType.Error
             };
             return Page();
+
+
         }
     }
 }
