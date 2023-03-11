@@ -33,44 +33,48 @@ namespace Shrimply.Pages.Admin.Users
                 ViewData["Notification"] = JsonSerializer.Deserialize<Notification>(notificationJson);
             }
 
-            Users = new List<User>();
-            var users = (await _userRepository.GetAll()).ToList();
-            foreach (var user in users)
-            {
-                Users.Add(new User
-                {
-                    Id = Guid.Parse(user.Id),
-                    Username = user.UserName,
-                    Email = user.Email,
-                });
-            }
+            await GetUsers();
             return Page();
         }
         public async Task<IActionResult> OnPost()
         {
-            var user = new IdentityUser
+            if (ModelState.IsValid)
             {
-                UserName = AddUser.Username,
-                Email = AddUser.Email,
-            };
-            var roles = new List<string> { "User" };
-            if (AddUser.AdminCheckbox)
-            {
-                roles.Add("Admin");
-            }
-            var result = await _userRepository.Add(user, AddUser.Password, roles);
-
-            if (result)
-            {
-                var notification = new Notification
+                var user = new IdentityUser
                 {
-                    Message = "User successfully registered.",
-                    Type = Enums.NotificationType.Success
+                    UserName = AddUser.Username,
+                    Email = AddUser.Email,
                 };
-                TempData["Notification"] = JsonSerializer.Serialize(notification);
-                return RedirectToPage("/Admin/Users/Index");
+                var roles = new List<string> { "User" };
+                if (AddUser.AdminCheckbox)
+                {
+                    roles.Add("Admin");
+                }
+                var result = await _userRepository.Add(user, AddUser.Password, roles);
+
+                if (result)
+                {
+                    var notification = new Notification
+                    {
+                        Message = "User successfully registered.",
+                        Type = Enums.NotificationType.Success
+                    };
+                    TempData["Notification"] = JsonSerializer.Serialize(notification);
+                    return RedirectToPage("/Admin/Users/Index");
+                }
+                return Page();
             }
-            return Page();
+            else
+            {
+                ViewData["Notification"] = new Notification
+                {
+                    Message = "Something went wrong.",
+                    Type = Enums.NotificationType.Error
+                };
+                await GetUsers();
+                return Page();
+            }
+            
         }
         public async Task<IActionResult> OnPostDelete()
         {
@@ -84,6 +88,20 @@ namespace Shrimply.Pages.Admin.Users
             TempData["Notification"] = JsonSerializer.Serialize(notification);
 
             return RedirectToPage("/Admin/Users/Index");
+        }
+        private async Task GetUsers()
+        {
+            Users = new List<User>();
+            var users = (await _userRepository.GetAll()).ToList();
+            foreach (var user in users)
+            {
+                Users.Add(new User
+                {
+                    Id = Guid.Parse(user.Id),
+                    Username = user.UserName,
+                    Email = user.Email,
+                });
+            }
         }
     }
 }

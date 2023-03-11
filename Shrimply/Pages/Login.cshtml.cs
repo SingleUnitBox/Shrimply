@@ -17,29 +17,32 @@ namespace Shrimply.Pages
         public void OnGet()
         {
         }
-        public async Task<IActionResult> OnPost(string ReturnUrl)
+        public async Task<IActionResult> OnPost(string? ReturnUrl)
         {
-            var signInResult = await _signInManager.PasswordSignInAsync(
+            if (ModelState.IsValid)
+            {
+                var signInResult = await _signInManager.PasswordSignInAsync(
                 LoginViewModel.Username, LoginViewModel.Password, false, false);
-            if (signInResult.Succeeded)
-            {
-                if (!string.IsNullOrWhiteSpace(ReturnUrl))
+                if (signInResult.Succeeded)
                 {
-                    return RedirectToPage(ReturnUrl);
+                    if (!string.IsNullOrWhiteSpace(ReturnUrl))
+                    {
+                        return RedirectToPage(ReturnUrl);
+                    }
+                    return RedirectToPage("Index");
+
                 }
-                return RedirectToPage("Index");
-                      
-            }
-            else
-            {
-                ViewData["Notification"] = new Notification
+                else
                 {
-                    Message = "Unable to login.",
-                    Type = Enums.NotificationType.Error
-                };
-                return Page();
+                    ViewData["Notification"] = new Notification
+                    {
+                        Message = "Unable to login.",
+                        Type = Enums.NotificationType.Error
+                    };
+                    return Page();
+                }
             }
-            
+            return Page();        
         }
     }
 }
